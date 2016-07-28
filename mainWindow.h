@@ -24,6 +24,7 @@ class MainWindow : public QMainWindow
     static const int ReceiveCycle=20;
 public:
     MainWindow(QWidget *parent = 0);
+    ~MainWindow();
 public slots:
     void comSwitch();
     void autoSend();

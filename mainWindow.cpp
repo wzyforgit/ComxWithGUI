@@ -404,3 +404,40 @@ QString MainWindow::getComName(const QString &ComBoxText)
 
     return result;
 }
+
+MainWindow::~MainWindow()
+{
+    delete updateSerialInfo;
+    delete ComBox;
+    delete BaudBox;
+    delete ParityBox;
+    delete ByteSizeBox;
+    delete StopBitBox;
+    delete UartSwitch;
+
+    delete ReceiveBox;
+    delete ReceiveBoxClean;
+    delete DisplayByHex;
+
+    delete CodeSet;
+    delete UseGB;
+    delete UseUTF;
+
+    delete SendBox;
+    delete SendData;
+    delete SendInHex;
+    delete SendTimeMs;
+    delete SendTimeSet;
+    delete SendByTime;
+    delete SendTimer;
+
+    delete ComLabel;
+    delete BaudLabel;
+    delete ParityLabel;
+    delete ByteSizeLabel;
+    delete StopBitLabel;
+
+    delete mainLayout;
+    delete ErrorDialog;
+    delete ReceiveTimer;
+}
