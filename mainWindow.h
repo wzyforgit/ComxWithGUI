@@ -16,6 +16,7 @@ class QHBoxLayout;
 class QTextEdit;
 class QErrorMessage;
 class QCheckBox;
+class QGridLayout;
 
 class MainWindow : public QMainWindow
 {
@@ -67,7 +68,7 @@ private:
     QLabel *StopBitLabel;
 
     void createUartLayout();
-    QHBoxLayout *mainLayout;
+    QGridLayout *mainLayout;
 
     QErrorMessage *ErrorDialog;
 

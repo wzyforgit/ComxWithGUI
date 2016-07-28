@@ -9,9 +9,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     createUartLayout();
     auto mainWidget=new QWidget;
     mainWidget->setLayout(mainLayout);
-//    setFixedSize(420,360);
+    setFixedSize(550,470);
     setCentralWidget(mainWidget);
-    setWindowTitle(tr("串口调试助手V0.1"));
+    setWindowTitle(tr("串口调试助手V0.2"));
 }
 
 void MainWindow::createUartBoxs()
@@ -59,7 +59,7 @@ void MainWindow::createUartBoxs()
 
     /*发送框*/
     SendBox=new QTextEdit;
-    SendBox->setText(tr("串口调试助手v0.1(by海魂水晶)"));
+    SendBox->setText(tr("串口调试助手v0.2(by海魂水晶)"));
 
     SendInHex=new QCheckBox(tr("十六进制发送"));
     SendInHex->setEnabled(false);
@@ -135,60 +135,48 @@ void MainWindow::createUartLabels()
 
 void MainWindow::createUartLayout()
 {
-    mainLayout=new QHBoxLayout;
-
-    /*左侧*/
     createUartBoxs();
     createUartLabels();
 
-    QHBoxLayout *uartSetLayouts[5];
-    for(int i=0;i!=5;i++)
-    {
-        uartSetLayouts[i]=new QHBoxLayout;
-    }
-    uartSetLayouts[0]->addWidget(ComLabel);
-    uartSetLayouts[0]->addWidget(ComBox);
-    uartSetLayouts[1]->addWidget(BaudLabel);
-    uartSetLayouts[1]->addWidget(BaudBox);
-    uartSetLayouts[2]->addWidget(ParityLabel);
-    uartSetLayouts[2]->addWidget(ParityBox);
-    uartSetLayouts[3]->addWidget(ByteSizeLabel);
-    uartSetLayouts[3]->addWidget(ByteSizeBox);
-    uartSetLayouts[4]->addWidget(StopBitLabel);
-    uartSetLayouts[4]->addWidget(StopBitBox);
+    auto uartSetLayout=new QGridLayout;
+    uartSetLayout->addWidget(ComLabel,0,0);
+    uartSetLayout->addWidget(ComBox,0,1);
+    uartSetLayout->addWidget(BaudLabel,1,0);
+    uartSetLayout->addWidget(BaudBox,1,1);
+    uartSetLayout->addWidget(ParityLabel,2,0);
+    uartSetLayout->addWidget(ParityBox,2,1);
+    uartSetLayout->addWidget(ByteSizeLabel,3,0);
+    uartSetLayout->addWidget(ByteSizeBox,3,1);
+    uartSetLayout->addWidget(StopBitLabel,4,0);
+    uartSetLayout->addWidget(StopBitBox,4,1);
 
-    auto uartSetLayout=new QVBoxLayout;
-    for(int i=0;i!=5;i++)
-    {
-        uartSetLayout->addLayout(uartSetLayouts[i]);
-    }
-    uartSetLayout->addWidget(UartSwitch);
-    uartSetLayout->addWidget(ReceiveBoxClean);
-    uartSetLayout->addWidget(DisplayByHex);
-    uartSetLayout->addWidget(UseUTF);
-    uartSetLayout->addWidget(UseGB);
+    uartSetLayout->addWidget(UartSwitch,5,0,1,2);
+    uartSetLayout->addWidget(ReceiveBoxClean,6,0,1,2);
+    uartSetLayout->addWidget(DisplayByHex,7,0,1,2);
+    uartSetLayout->addWidget(UseUTF,8,0,1,2);
+    uartSetLayout->addWidget(UseGB,9,0,1,2);
 
-    uartSetLayout->addStretch();
+    auto uartSendLayout=new QGridLayout;
+    uartSendLayout->addWidget(SendTimeSet,0,0);
+    uartSendLayout->addWidget(SendTimeMs,0,1);
+    uartSendLayout->addWidget(SendByTime,1,0,1,2);
+    uartSendLayout->addWidget(SendInHex,2,0,1,2);
+    uartSendLayout->addWidget(SendData,3,0,1,2);
 
-    auto uartSendTimeLayout=new QHBoxLayout;
+    auto leftLayout=new QVBoxLayout;
 
-    uartSendTimeLayout->addWidget(SendTimeSet);
-    uartSendTimeLayout->addWidget(SendTimeMs);
-    uartSendTimeLayout->addStretch();
+    leftLayout->addLayout(uartSetLayout);
+    leftLayout->addStretch();
+    leftLayout->addLayout(uartSendLayout);
 
-    uartSetLayout->addWidget(SendByTime);
-    uartSetLayout->addLayout(uartSendTimeLayout);
-    uartSetLayout->addWidget(SendInHex);
-    uartSetLayout->addWidget(SendData);
+    ReceiveBox->setMinimumWidth(400);
+    auto rightLayout=new QVBoxLayout;
+    rightLayout->addWidget(ReceiveBox);
+    rightLayout->addWidget(SendBox);
 
-    mainLayout->addLayout(uartSetLayout);
-
-    /*右侧编辑框*/
-    auto editLayout=new QVBoxLayout;
-    editLayout->addWidget(ReceiveBox);
-    editLayout->addWidget(SendBox);
-
-    mainLayout->addLayout(editLayout);
+    mainLayout=new QGridLayout;
+    mainLayout->addLayout(leftLayout,0,0);
+    mainLayout->addLayout(rightLayout,0,1,1,2);
 }
 
 void MainWindow::comSwitch()
