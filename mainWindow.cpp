@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     createUartLayout();
     auto mainWidget=new QWidget;
     mainWidget->setLayout(mainLayout);
-    setFixedSize(420,360);
+//    setFixedSize(420,360);
     setCentralWidget(mainWidget);
     setWindowTitle(tr("串口调试助手V0.1"));
 }
@@ -125,10 +125,10 @@ void MainWindow::createUartBoxs()
 
 void MainWindow::createUartLabels()
 {
-    ComLabel=new QLabel(tr("串口号:"));
+    ComLabel=new QLabel(tr("串口:"));
     BaudLabel=new QLabel(tr("波特率:"));
     ParityLabel=new QLabel(tr("校验位:"));
-    ByteSizeLabel=new QLabel(tr("数据长:"));
+    ByteSizeLabel=new QLabel(tr("数据位:"));
     StopBitLabel=new QLabel(tr("停止位:"));
     SendTimeMs=new QLabel(tr("毫秒"));
 }
@@ -196,7 +196,7 @@ void MainWindow::comSwitch()
     if(fComOpen==false)
     {
         /*打开串口*/
-        ser.setPortName(QString("\\\\.\\")+ComBox->currentText());
+        ser.setPortName(QString("\\\\.\\")+getComName(ComBox->currentText()));
         ser.setBaudRate(BaudBox->currentText().toInt());
         switch(ByteSizeBox->currentText().toInt())
         {
@@ -220,7 +220,7 @@ void MainWindow::comSwitch()
 
         if(ser.open(QIODevice::ReadWrite)==false)
         {
-            ErrorDialog->showMessage(tr("串口打开失败，串口不存在或正在被占用"));
+            ErrorDialog->showMessage(tr("串口正在被占用"));
             return;
         }
         fComOpen=true;
@@ -353,7 +353,7 @@ void MainWindow::updateComBox(const QList<QSerialPortInfo> &now)
         auto inow=now.begin();
         for(;inow!=now.end();++inow)
         {
-            if(ComBox->itemText(i)==inow->portName())
+            if(ComBox->itemText(i)==inow->description()+" "+inow->portName())
             {
                 break;
             }
@@ -370,19 +370,49 @@ void MainWindow::updateComBox(const QList<QSerialPortInfo> &now)
         int i=0;
         for(;i<ComBox->count();i++)
         {
-            if(ComBox->itemText(i)==inow->portName())
+            if(ComBox->itemText(i)==inow->description()+" "+inow->portName())
             {
                 break;
             }
         }
         if(i==ComBox->count())
         {
-            ComBox->addItem(inow->portName());
+            ComBox->addItem(inow->description()+" "+inow->portName());
         }
     }
+
+    /*自适应调整下拉宽度*/
+    int maxLen=0;
+    for(auto &i:now)
+    {
+        if(maxLen<(i.description()+" "+i.portName()).size())
+        {
+            maxLen=(i.description()+" "+i.portName()).size();
+        }
+    }
+
+    ComBox->view()->setMinimumWidth(maxLen*6+10);
 }
 
 bool operator==(const QSerialPortInfo &lhs,const QSerialPortInfo &rhs)
 {
-    return lhs.portName()==rhs.portName();
+    return lhs.portName()==rhs.portName() &&
+           lhs.description()==rhs.description();
+}
+
+QString MainWindow::getComName(const QString &ComBoxText)
+{
+    QString result;
+
+    auto pText=ComBoxText.end();
+    --pText;
+    for(;*pText!=' ';--pText);
+    pText++;
+
+    for(;pText!=ComBoxText.end();++pText)
+    {
+        result+=*pText;
+    }
+
+    return result;
 }

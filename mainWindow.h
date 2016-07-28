@@ -38,6 +38,7 @@ private:
     QComboBox *ByteSizeBox;
     QComboBox *StopBitBox;
     QPushButton *UartSwitch;
+    QString getComName(const QString &ComBoxText);
 
     QTextEdit *ReceiveBox;
     QPushButton *ReceiveBoxClean;
