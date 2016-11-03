@@ -22,3 +22,6 @@ SOURCES += \
 HEADERS  += \
     mainWindow.h \
     common.h
+
+DISTFILES += \
+    s5.png

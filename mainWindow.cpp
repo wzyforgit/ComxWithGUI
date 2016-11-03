@@ -3,14 +3,51 @@
 #include "mainWindow.h"
 #include "common.h"
 #include <QTextCursor>
+#include <QFrame>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     createUartLayout();
-    auto mainWidget=new QWidget;
-    mainWidget->setLayout(mainLayout);
-    setFixedSize(550,470);
-    setCentralWidget(mainWidget);
+    /*setStyleSheet("QPushButton {\
+                   color: white;\
+                   background: transparent;\
+                   border-style: outset;\
+                   border-width: 1px;\
+                   border-color: beige; }"
+
+                  "QComboBox {\
+                   color: white;\
+                   background: transparent }"
+
+                  "QCheckBox {\
+                   color: white;\
+                   background: transparent }"
+
+                  "QRadioButton {\
+                   color: white;\
+                   background: transparent }"
+
+                  "QTextEdit {\
+                   color: white;\
+                   background: transparent }"
+
+                  "QLineEdit{\
+                   color: white;\
+                   background: transparent}"
+
+                  "QLabel { color: white }");*/
+    auto mainFrame=new QWidget;
+    mainFrame->setAutoFillBackground(true);
+    QPalette palette;
+    QPixmap pixmap("source//back.png");
+    palette.setBrush(QPalette::Window, QBrush(pixmap));
+    mainFrame->setPalette(palette);
+
+    mainFrame->setLayout(mainLayout);
+
+    setWindowIcon(QIcon("source\\Icon.png"));
+    setFixedSize(557,447);
+    setCentralWidget(mainFrame);
     setWindowTitle(tr("串口调试助手V0.2"));
 }
 
@@ -59,7 +96,7 @@ void MainWindow::createUartBoxs()
 
     /*发送框*/
     SendBox=new QTextEdit;
-    SendBox->setText(tr("串口调试助手v0.2(by海魂水晶)"));
+    SendBox->setText(tr("串口调试助手v0.2"));
 
     SendInHex=new QCheckBox(tr("十六进制发送"));
     SendInHex->setEnabled(false);
